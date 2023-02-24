@@ -59,6 +59,7 @@ class Note {
           String? descriptipn,
           DateTime? createdTime}) =>
       Note(
+        id: id ?? this.id,
           isImportant: isImportant ?? this.isImportant,
           number: number ?? this.number,
           title: title ?? this.title,

@@ -57,9 +57,18 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        IconButton(icon: const Icon(Icons.star),color:note.isImportant? Colors.yellow:Colors.grey,onPressed: (() {
-                          
-                        }),)
+                        IconButton(
+                          icon: const Icon(Icons.star),
+                          color: note.isImportant ? Colors.yellow : Colors.grey,
+                          onPressed: (() async{
+                            updateNote();
+                           setState(() {
+
+                           });                            
+                                note = await NotesDatabase.instance.readNote(widget.noteId);
+
+                          }),
+                        )
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -70,12 +79,23 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                     const SizedBox(height: 8),
                     Text(
                       note.descriptipn,
-                      style: const TextStyle(color: Colors.black87, fontSize: 18),
+                      style:
+                          const TextStyle(color: Colors.black87, fontSize: 18),
                     )
                   ],
                 ),
               ),
       );
+  Future updateNote() async {
+    final newnote = note.copy(
+      isImportant: !note.isImportant,
+      number: note.number,
+      title: note.title,
+      descriptipn: note.descriptipn,
+    );
+
+    await NotesDatabase.instance.updateNote(newnote);
+  }
 
   Widget editButton() => IconButton(
       icon: const Icon(Icons.edit_outlined),
