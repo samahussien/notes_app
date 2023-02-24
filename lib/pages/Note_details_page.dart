@@ -60,12 +60,12 @@ class _NoteDetailPageState extends State<NoteDetailPage> {
                         IconButton(
                           icon: const Icon(Icons.star),
                           color: note.isImportant ? Colors.yellow : Colors.grey,
-                          onPressed: (() async{
+                          onPressed: (()async {
                             updateNote();
-                           setState(() {
-
-                           });                            
-                                note = await NotesDatabase.instance.readNote(widget.noteId);
+                                 note = await NotesDatabase.instance.readNote(widget.noteId);
+                                 setState(() {
+                                   
+                                 });
 
                           }),
                         )

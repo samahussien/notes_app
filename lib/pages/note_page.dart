@@ -17,6 +17,22 @@ class NotesPage extends StatefulWidget {
 class _NotesPageState extends State<NotesPage> {
   late List<Note> notes;
   bool isLoading = false;
+  Widget title = const Text(
+    'Notes',
+    style: TextStyle(fontSize: 20),
+  );
+  Widget customSerachBar = const Text(
+    'Notes',
+    style: TextStyle(fontSize: 20),
+  );
+  Icon searchIcon = Icon(
+    Icons.search,
+    color: Colors.white,
+  );
+  Icon customIcon = Icon(
+    Icons.search,
+    color: Colors.white,
+  );
   @override
   void initState() {
     super.initState();
@@ -43,15 +59,33 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Notes',
-          style: TextStyle(fontSize: 14),
-        ),
-        actions:const [
-           Icon(
-            Icons.search,
+        title: customSerachBar,
+        actions: [
+          IconButton(
+            icon: customIcon,
+            onPressed: () {
+              setState(() {
+                if (customIcon.icon == Icons.search) {
+                  customIcon = const Icon(Icons.cancel);
+                  customSerachBar = ListTile(
+                    leading: searchIcon,
+                    title: TextField(
+                      decoration: InputDecoration(
+                          hintText: 'search ...',
+                          hintStyle:
+                              TextStyle(color: Colors.black54, fontSize: 18),
+                          border: InputBorder.none),
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  );
+                } else {
+                  customIcon = const Icon(Icons.search);
+                  customSerachBar = title;
+                }
+              });
+            },
           ),
-           SizedBox(
+          SizedBox(
             width: 12,
           )
         ],
@@ -62,15 +96,18 @@ class _NotesPageState extends State<NotesPage> {
               : notes.isEmpty
                   ? const Text(
                       'no notes',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w300),
                     )
                   : buildNotes()),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.lightGreen,
         child: const Icon(Icons.add),
         onPressed: () async {
-          await Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => const AddEditNotePage()));
+          await Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => const AddEditNotePage()));
           refreshNotes();
         },
       ),
@@ -78,18 +115,19 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   Widget buildNotes() => MasonryGridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: 3,
         itemCount: notes.length,
         mainAxisSpacing: 4,
         crossAxisSpacing: 4,
         itemBuilder: ((context, index) {
-        return  GestureDetector(
+          return GestureDetector(
             onTap: () async {
               await Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => NoteDetailPage(noteId: notes[index].id!)));
+                  builder: (context) =>
+                      NoteDetailPage(noteId: notes[index].id!)));
               refreshNotes();
             },
-            child: NoteCardWidget(note: notes[index], index: index),
+            child: NoteCardWidget(note: notes[index], index: index,),
           );
         }),
       );
